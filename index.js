@@ -10,6 +10,16 @@ app.use(cors());
 app.use(express.json());
 dotenv.config();
 
+const mongoClient = new MongoClient(process.env.MONGO_URI);
+const db = mongoClient.db('chat')
+
+try{
+    mongoClient.connect()
+    console.log("connected database")
+}catch (err) {
+    console.log(err);
+}
+
 
 
 
