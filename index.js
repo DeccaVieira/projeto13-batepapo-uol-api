@@ -48,6 +48,32 @@ const participantSchema = joi.object({
     
     })
 
+    const messageSchema = joi.object({
+        to: joi.string().required(),
+        text: joi.string().required(),
+        type: typeMessage
+})
+
+    app.post('/messages' , async (req, res) => {
+
+        const message = req.body;
+        const validation = messageSchema.validate(message, { abortEarly: false });
+  
+        if (validation.error) {
+            const erros = validation.error.details.map((detail) => detail.message);
+            res.status(422).send(erros);
+            return;
+          }
+    try{
+     await db.collection('messages').insertOne(message);
+     res.sendStatus(201)
+    } catch (err) {
+        console.log(err);
+        res.sendStatus(500);
+    }
+    
+    })
+
 
 app.listen(5000, () =>{ 
     console.log("Running in port 5000")
