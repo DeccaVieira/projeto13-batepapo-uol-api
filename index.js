@@ -74,6 +74,15 @@ const participantSchema = joi.object({
     
     })
 
+    app.get('/participants', async (req, res) => {
+        try {
+    const participants = await db.collection('participants').find().toArray();
+    res.send(participants) 
+        } catch (err) { 
+            console.log(err);
+            res.sendStatus(500);
+        }
+    })
 
 app.listen(5000, () =>{ 
     console.log("Running in port 5000")
