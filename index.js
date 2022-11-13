@@ -20,7 +20,33 @@ try{
     console.log(err);
 }
 
+const participantSchema = joi.object({
+    name: joi.string().required(),
+      });
+      let typeMessage = 'message' || 'private_message';
 
+      app.post('/participants' , async (req, res) => {
+
+        const participant = req.body;
+        console.log(res.name)
+    
+    
+        const validation = participantSchema.validate(participant, { abortEarly: false });
+    
+        if (validation.error) {
+            const erros = validation.error.details.map((detail) => detail.message);
+            res.status(422).send(erros);
+            return;
+          }
+    try{
+     await db.collection('participants').insertOne(participant);
+     res.sendStatus(201)
+    } catch (err) {
+        console.log(err);
+        res.sendStatus(500);
+    }
+    
+    })
 
 
 app.listen(5000, () =>{ 
